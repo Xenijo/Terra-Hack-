@@ -1,0 +1,30 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem: //this is allocated memory, you have read,write,execute access
+//place your code here
+
+originalcode:
+add [edx+00000408],eax
+
+exit:
+jmp returnhere
+
+Terraria.Player::Hurt+1201:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+Terraria.Player::Hurt+1201:
+sub [edx+00000408],eax
+//Alt: db 29 82 08 04 00 00
