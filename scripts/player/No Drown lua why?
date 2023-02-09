@@ -1,0 +1,40 @@
+{$lua}
+if syntaxcheck then return end
+
+
+[ENABLE]
+
+scan = "Terraria.Player::CheckDrowning+35C"
+registerSymbol("INJECT",scan)
+
+mem = allocateMemory(0x1000)
+registerSymbol("newmem",mem)
+
+
+script = [[
+label(return)
+
+newmem:
+
+
+  jmp return
+
+INJECT:
+  jmp newmem
+  nop 2
+return:
+
+]]
+
+autoAssemble(script)
+
+[DISABLE]
+writeBytes(scan,0x83, 0x80, 0x08, 0x04, 0x00, 0x00, 0xFE)
+--INJECT:
+  --db 83 80 08 04 00 00 FE
+
+unregisterSymbol("INJECT")
+unregisterSymbol("newmem")
+
+deAlloc(newmem)
+
